@@ -1,26 +1,62 @@
 # Test your FastAPI endpoints
 
-POST http://127.0.0.1:8000/api/add-login
+# Logins
+
+POST http://127.0.0.1:8000/logins/add-login
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/api/username/email
+GET http://127.0.0.1:8000/logins/username/email
 Accept: application/json
 
 ###
 
-PUT http://127.0.0.1:8000/api/update-login
+PUT http://127.0.0.1:8000/logins/update-login
 Accept: application/json
 
 ###
 
-DELETE http://127.0.0.1:8000/api/delete-login
+DELETE http://127.0.0.1:8000/logins/delete-login
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/api/username
+GET http://127.0.0.1:8000/logins/username
+Accept: application/json
+
+###
+
+# -----------------------------------------------------------------------------------------------
+
+# Posts
+
+POST http://127.0.0.1:8000/posts/add-post
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/posts/username/post-id
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/posts/update-post
+Accept: application/json
+
+###
+
+DELETE http://127.0.0.1:8000/posts/delete-post
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/posts/username
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/posts
 Accept: application/json
 
 ###
