@@ -43,7 +43,7 @@ async def get_ss_login(user_name: str):
 
 # Create new post
 @app.post('/posts/add-post')
-async def add_ss_post(user_name: str, post_id: int, post_content: {}):
+async def add_ss_post(user_name: str, post_id: int, post_content: str):
     ss_posts.add_post(user_name, post_id, post_content)
 
 
@@ -55,7 +55,7 @@ async def get_ss_post(user_name: str, post_id: int):
 
 # Update post
 @app.put("/posts/update-post")
-async def update_ss_post(user_name: str, post_id: int, post_content: {}):
+async def update_ss_post(user_name: str, post_id: int, post_content: str):
     return ss_posts.update_post(user_name, post_id, post_content)
 
 
