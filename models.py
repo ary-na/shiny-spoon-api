@@ -57,6 +57,7 @@ class SSLogins:
 
     # Add Login item to database
     def add_login(self, user_name, email, password):
+
         try:
             self.table.put_item(
                 Item={
