@@ -7,7 +7,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/logins/username/email
+GET http://127.0.0.1:8000/logins/email/username
 Accept: application/json
 
 ###
@@ -22,7 +22,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/logins/username
+GET http://127.0.0.1:8000/logins/email
 Accept: application/json
 
 ###
@@ -36,7 +36,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/posts/username/post-id
+GET http://127.0.0.1:8000/posts/email/post-id
 Accept: application/json
 
 ###
@@ -51,7 +51,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/posts/username
+GET http://127.0.0.1:8000/posts/email
 Accept: application/json
 
 ###
