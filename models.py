@@ -38,12 +38,12 @@ class SSLogins:
             self.table = self.dyn_resource.create_table(
                 TableName=table_name,
                 KeySchema=[
-                    {'AttributeName': 'user_name', 'KeyType': 'HASH'},  # Partition key
-                    {'AttributeName': 'email', 'KeyType': 'RANGE'},  # Sort key
+                    {'AttributeName': 'email', 'KeyType': 'HASH'},  # Partition key
+                    {'AttributeName': 'username', 'KeyType': 'RANGE'},  # Sort key
                 ],
                 AttributeDefinitions=[
-                    {'AttributeName': 'user_name', 'AttributeType': 'S'},
                     {'AttributeName': 'email', 'AttributeType': 'S'},
+                    {'AttributeName': 'username', 'AttributeType': 'S'},
                 ],
                 ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
             self.table.wait_until_exists()
@@ -56,13 +56,13 @@ class SSLogins:
             return self.table
 
     # Add Login item to database
-    def add_login(self, user_name, email, password):
+    def add_login(self, email, username, password):
 
         try:
             self.table.put_item(
                 Item={
-                    'user_name': user_name,
                     'email': email,
+                    'username': username,
                     'password': password})
         except ClientError as err:
             logger.error(
@@ -72,23 +72,23 @@ class SSLogins:
             raise
 
     # Get Login item from database
-    def get_login(self, user_name, email):
+    def get_login(self, email, username):
         try:
-            response = self.table.get_item(Key={'user_name': user_name, 'email': email})
+            response = self.table.get_item(Key={'email': email, 'username': username})
         except ClientError as err:
             logger.error(
                 "Couldn't get login %s from table %s. Here's why: %s: %s",
-                user_name, email, self.table.name,
+                email, username, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Item']
 
     # Update Login item in database
-    def update_login(self, user_name, email, password):
+    def update_login(self, email, username, password):
         try:
             response = self.table.update_item(
-                Key={'user_name': user_name, 'email': email},
+                Key={'email': email, 'username': username},
                 UpdateExpression="set password=:p",
                 ExpressionAttributeValues={
                     ':p': password},
@@ -96,29 +96,29 @@ class SSLogins:
         except ClientError as err:
             logger.error(
                 "Couldn't update login %s in table %s. Here's why: %s: %s",
-                user_name, email, self.table.name,
+                email, username, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Attributes']
 
     # Delete Login item from database
-    def delete_login(self, user_name, email):
+    def delete_login(self, email, username):
         try:
-            self.table.delete_item(Key={'user_name': user_name, 'email': email})
+            self.table.delete_item(Key={'email': email, 'username': username})
         except ClientError as err:
             logger.error(
-                "Couldn't delete login %s. Here's why: %s: %s", user_name, email,
+                "Couldn't delete login %s. Here's why: %s: %s", email, username,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
     # Query Login item by username from database
-    def query_login(self, user_name):
+    def query_login(self, email):
         try:
-            response = self.table.query(KeyConditionExpression=Key('user_name').eq(user_name))
+            response = self.table.query(KeyConditionExpression=Key('email').eq(email))
         except ClientError as err:
             logger.error(
-                "Couldn't query for login with username %s. Here's why: %s: %s", user_name,
+                "Couldn't query for login with username %s. Here's why: %s: %s", email,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
@@ -159,11 +159,11 @@ class SSPosts:
             self.table = self.dyn_resource.create_table(
                 TableName=table_name,
                 KeySchema=[
-                    {'AttributeName': 'user_name', 'KeyType': 'HASH'},  # Partition key
+                    {'AttributeName': 'email', 'KeyType': 'HASH'},  # Partition key
                     {'AttributeName': 'post_id', 'KeyType': 'RANGE'},  # Sort key
                 ],
                 AttributeDefinitions=[
-                    {'AttributeName': 'user_name', 'AttributeType': 'S'},
+                    {'AttributeName': 'email', 'AttributeType': 'S'},
                     {'AttributeName': 'post_id', 'AttributeType': 'N'},
                 ],
                 ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
@@ -177,68 +177,68 @@ class SSPosts:
             return self.table
 
     # Add Post item to database
-    def add_post(self, user_name, post_id, post_content):
+    def add_post(self, email, post_id, post_content):
         try:
             self.table.put_item(
                 Item={
-                    'user_name': user_name,
+                    'email': email,
                     'post_id': int(post_id),
                     'post_content': post_content})
         except ClientError as err:
             logger.error(
-                "Couldn't add login %s to table %s. Here's why: %s: %s",
-                user_name, post_id, self.table.name,
+                "Couldn't add post %s to table %s. Here's why: %s: %s",
+                email, post_id, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
     # Get Post item from database
-    def get_post(self, user_name, post_id):
+    def get_post(self, email, post_id):
         try:
-            response = self.table.get_item(Key={'user_name': user_name, 'post_id': int(post_id)})
+            response = self.table.get_item(Key={'email': email, 'post_id': int(post_id)})
         except ClientError as err:
             logger.error(
                 "Couldn't get post %s from table %s. Here's why: %s: %s",
-                user_name, post_id, self.table.name,
+                email, post_id, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Item']
 
     # Update Post item in database
-    def update_post(self, user_name, post_id, post_content):
+    def update_post(self, email, post_id, post_content):
         try:
             response = self.table.update_item(
-                Key={'user_name': user_name, 'post_id': int(post_id)},
+                Key={'email': email, 'post_id': int(post_id)},
                 UpdateExpression="set post_content=:p",
                 ExpressionAttributeValues={
                     ':p': post_content},
                 ReturnValues="UPDATED_NEW")
         except ClientError as err:
             logger.error(
-                "Couldn't update login %s in table %s. Here's why: %s: %s",
-                user_name, post_id, self.table.name,
+                "Couldn't update post %s in table %s. Here's why: %s: %s",
+                email, post_id, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Attributes']
 
     # Delete Post item from database
-    def delete_post(self, user_name, post_id):
+    def delete_post(self, email, post_id):
         try:
-            self.table.delete_item(Key={'user_name': user_name, 'post_id': post_id})
+            self.table.delete_item(Key={'email': email, 'post_id': post_id})
         except ClientError as err:
             logger.error(
-                "Couldn't delete post %s. Here's why: %s: %s", user_name, post_id,
+                "Couldn't delete post %s. Here's why: %s: %s", email, post_id,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
     # Query Post item by username from database
-    def query_post(self, user_name):
+    def query_post(self, email):
         try:
-            response = self.table.query(KeyConditionExpression=Key('user_name').eq(user_name))
+            response = self.table.query(KeyConditionExpression=Key('email').eq(email))
         except ClientError as err:
             logger.error(
-                "Couldn't query for posts with username %s. Here's why: %s: %s", user_name,
+                "Couldn't query for posts with email %s. Here's why: %s: %s", email,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
