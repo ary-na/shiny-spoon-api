@@ -60,3 +60,12 @@ GET http://127.0.0.1:8000/posts
 Accept: application/json
 
 ###
+
+# -----------------------------------------------------------------------------------------------
+
+# Utilities
+
+POST http://127.0.0.1:8000/utilities/upload-img
+Accept: application/json
+
+###
