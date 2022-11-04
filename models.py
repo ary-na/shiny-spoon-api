@@ -296,3 +296,19 @@ def init_ss_posts(table_name, dyn_resource):
 def upload_img(s3_client, bucket_name, img_file, folder_name, object_key):
     s3_client.upload_fileobj(img_file.file, bucket_name, folder_name + object_key,
                              ExtraArgs={'ContentType': img_file.content_type})
+
+
+# Get pre-signed url
+def generate_pre_signed_url(s3_client, bucket_name, object_key):
+    try:
+        url = s3_client.generate_presigned_url(
+            ClientMethod="get_object",
+            Params={'Bucket': bucket_name, 'Key': object_key},
+            ExpiresIn=3600
+        )
+        logger.info("Got pre-signed URL: %s", url)
+    except ClientError:
+        logger.exception(
+            "Couldn't get a pre-signed URL for client method '%s'.")
+        raise
+    return url

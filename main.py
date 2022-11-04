@@ -1,7 +1,7 @@
 import boto3
 from fastapi import FastAPI, UploadFile, File
 
-from models import init_ss_logins, init_ss_posts, upload_img
+from models import init_ss_logins, init_ss_posts, upload_img, generate_pre_signed_url
 
 app = FastAPI()
 
@@ -85,3 +85,9 @@ async def get_ss_posts():
 @app.post('/utilities/upload-img')
 async def upload_ss_img(img_file: UploadFile, folder_name: str, object_key: str):
     upload_img(s3_client, bucket_name, img_file, folder_name, object_key)
+
+
+# Get pre-signed url
+@app.get('utilities/{object-key}')
+async def get_pre_signed_url(object_key: str):
+    return generate_pre_signed_url(s3_client, bucket_name, object_key)
