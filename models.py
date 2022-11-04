@@ -1,3 +1,4 @@
+import datetime
 import logging
 
 from boto3.dynamodb.conditions import Key
@@ -164,7 +165,7 @@ class SSPosts:
                 ],
                 AttributeDefinitions=[
                     {'AttributeName': 'email', 'AttributeType': 'S'},
-                    {'AttributeName': 'post_id', 'AttributeType': 'N'},
+                    {'AttributeName': 'post_id', 'AttributeType': 'S'},
                 ],
                 ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
             self.table.wait_until_exists()
@@ -177,13 +178,15 @@ class SSPosts:
             return self.table
 
     # Add Post item to database
-    def add_post(self, email, post_id, post_content):
+    def add_post(self, email, post_id, description, post_img_key):
         try:
             self.table.put_item(
                 Item={
                     'email': email,
-                    'post_id': int(post_id),
-                    'post_content': post_content})
+                    'post_id': post_id,
+                    'post_time_utc': str(datetime.datetime.utcnow()),
+                    'description': description,
+                    'post_img_key': post_img_key})
         except ClientError as err:
             logger.error(
                 "Couldn't add post %s to table %s. Here's why: %s: %s",

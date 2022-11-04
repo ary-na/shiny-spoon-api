@@ -45,8 +45,8 @@ async def get_ss_login(email: str):
 
 # Create new post
 @app.post('/posts/add-post')
-async def add_ss_post(email: str, post_id: int, post_content: str):
-    ss_posts.add_post(email, post_id, post_content)
+async def add_ss_post(email: str, post_id: str, description: str, post_img_key: str):
+    ss_posts.add_post(email, post_id, description, post_img_key)
 
 
 # Get post using username and post id
