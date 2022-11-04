@@ -50,21 +50,21 @@ async def add_ss_post(email: str, description: str, post_img_key: str):
 
 
 # Get post using date time utc and email
-@app.get('/posts/{date_time_utc}/{email}')
-async def get_ss_post(date_time_utc: str, email: int):
-    return ss_posts.get_post(date_time_utc, email)
+@app.get('/posts/{email}/{date_time_utc}')
+async def get_ss_post(email: str, date_time_utc: str,):
+    return ss_posts.get_post(email, date_time_utc)
 
 
 # Update post
 @app.put('/posts/update-post')
-async def update_ss_post(date_time_utc: str, email: str, post_content: str):
-    return ss_posts.update_post(date_time_utc, email, post_content)
+async def update_ss_post(email: str, date_time_utc: str, post_content: str):
+    return ss_posts.update_post(email, date_time_utc,  post_content)
 
 
 # Delete post
 @app.delete('/posts/delete-post')
-async def delete_ss_post(date_time_utc: str, email: str):
-    ss_posts.delete_post(date_time_utc, email)
+async def delete_ss_post(email: str, date_time_utc: str,):
+    ss_posts.delete_post(email, date_time_utc)
 
 
 # Get posts (Query)

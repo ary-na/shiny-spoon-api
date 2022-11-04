@@ -160,12 +160,12 @@ class SSPosts:
             self.table = self.dyn_resource.create_table(
                 TableName=table_name,
                 KeySchema=[
-                    {'AttributeName': 'date_time_utc', 'KeyType': 'HASH'},  # Partition key
-                    {'AttributeName': 'email', 'KeyType': 'RANGE'},  # Sort key
+                    {'AttributeName': 'email', 'KeyType': 'HASH'},  # Partition key
+                    {'AttributeName': 'date_time_utc', 'KeyType': 'RANGE'},  # Sort key
                 ],
                 AttributeDefinitions=[
-                    {'AttributeName': 'date_time_utc', 'AttributeType': 'S'},
                     {'AttributeName': 'email', 'AttributeType': 'S'},
+                    {'AttributeName': 'date_time_utc', 'AttributeType': 'S'},
                 ],
                 ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
             self.table.wait_until_exists()
@@ -182,8 +182,8 @@ class SSPosts:
         try:
             self.table.put_item(
                 Item={
-                    'date_time_utc': str(datetime.datetime.utcnow()),
                     'email': email,
+                    'date_time_utc': str(datetime.datetime.utcnow()),
                     'description': description,
                     'img_key': img_key})
         except ClientError as err:
@@ -194,23 +194,23 @@ class SSPosts:
             raise
 
     # Get Post item from database
-    def get_post(self, date_time_utc, email):
+    def get_post(self, email, date_time_utc):
         try:
-            response = self.table.get_item(Key={'date_time_utc': date_time_utc, 'email': email})
+            response = self.table.get_item(Key={'email': email, 'date_time_utc': date_time_utc})
         except ClientError as err:
             logger.error(
                 "Couldn't get post %s from table %s. Here's why: %s: %s",
-                date_time_utc, email, self.table.name,
+                email, date_time_utc, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Item']
 
     # Update Post item in database
-    def update_post(self, date_time_utc, email, post_content):
+    def update_post(self, email, date_time_utc, post_content):
         try:
             response = self.table.update_item(
-                Key={'date_time_utc': date_time_utc, 'email': email},
+                Key={'email': email, 'date_time_utc': date_time_utc},
                 UpdateExpression="set post_content=:p",
                 ExpressionAttributeValues={
                     ':p': post_content},
@@ -218,19 +218,19 @@ class SSPosts:
         except ClientError as err:
             logger.error(
                 "Couldn't update post %s in table %s. Here's why: %s: %s",
-                date_time_utc, email, self.table.name,
+                email, date_time_utc, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Attributes']
 
     # Delete Post item from database
-    def delete_post(self, date_time_utc, email):
+    def delete_post(self, email, date_time_utc):
         try:
-            self.table.delete_item(Key={'date_time_utc': date_time_utc, 'email': email})
+            self.table.delete_item(Key={'email': email, 'date_time_utc': date_time_utc})
         except ClientError as err:
             logger.error(
-                "Couldn't delete post %s. Here's why: %s: %s", date_time_utc, email,
+                "Couldn't delete post %s. Here's why: %s: %s", email, date_time_utc,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
