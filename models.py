@@ -285,3 +285,11 @@ def init_ss_posts(table_name, dyn_resource):
         print(f"\nCreated table {ss_posts.table.name}.")
 
     return ss_posts
+
+
+# -----------------------------------------------------------------------------------------------
+
+# Upload image
+def upload_img(s3_client, bucket_name, img_file, folder_name, object_key):
+    s3_client.upload_fileobj(img_file.file, bucket_name, folder_name + object_key,
+                             ExtraArgs={'ContentType': img_file.content_type})

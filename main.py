@@ -1,12 +1,14 @@
 import boto3
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 
-from models import init_ss_logins, init_ss_posts
+from models import init_ss_logins, init_ss_posts, upload_img
 
 app = FastAPI()
 
 ss_logins = init_ss_logins('ss-logins', boto3.resource('dynamodb', 'ap-southeast-2'))
 ss_posts = init_ss_posts('ss-posts', boto3.resource('dynamodb', 'ap-southeast-2'))
+s3_client = boto3.client('s3')
+bucket_name = 'shiny-spoon'
 
 
 # Create new login
@@ -48,13 +50,13 @@ async def add_ss_post(email: str, post_id: int, post_content: str):
 
 
 # Get post using username and post id
-@app.get("/posts/{email}/{post_id}")
+@app.get('/posts/{email}/{post_id}')
 async def get_ss_post(email: str, post_id: int):
     return ss_posts.get_post(email, post_id)
 
 
 # Update post
-@app.put("/posts/update-post")
+@app.put('/posts/update-post')
 async def update_ss_post(email: str, post_id: int, post_content: str):
     return ss_posts.update_post(email, post_id, post_content)
 
@@ -66,12 +68,20 @@ async def delete_ss_post(email: str, post_id: int):
 
 
 # Get post using user_name
-@app.get("/posts/{email}")
+@app.get('/posts/{email}')
 async def get_ss_post(email: str):
     return ss_posts.query_post(email)
 
 
 # Get posts
-@app.get("/posts")
+@app.get('/posts')
 async def get_ss_posts():
     return ss_posts.scan_posts()
+
+
+# -----------------------------------------------------------------------------------------------
+
+# Upload Image
+@app.post('/utilities/upload-img')
+async def upload_ss_img(img_file: UploadFile, folder_name: str, object_key: str):
+    upload_img(s3_client, bucket_name, img_file, folder_name, object_key)
