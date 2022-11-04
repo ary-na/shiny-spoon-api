@@ -160,12 +160,12 @@ class SSPosts:
             self.table = self.dyn_resource.create_table(
                 TableName=table_name,
                 KeySchema=[
-                    {'AttributeName': 'email', 'KeyType': 'HASH'},  # Partition key
-                    {'AttributeName': 'post_id', 'KeyType': 'RANGE'},  # Sort key
+                    {'AttributeName': 'date_time_utc', 'KeyType': 'HASH'},  # Partition key
+                    {'AttributeName': 'email', 'KeyType': 'RANGE'},  # Sort key
                 ],
                 AttributeDefinitions=[
+                    {'AttributeName': 'date_time_utc', 'AttributeType': 'S'},
                     {'AttributeName': 'email', 'AttributeType': 'S'},
-                    {'AttributeName': 'post_id', 'AttributeType': 'S'},
                 ],
                 ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
             self.table.wait_until_exists()
@@ -178,40 +178,39 @@ class SSPosts:
             return self.table
 
     # Add Post item to database
-    def add_post(self, email, post_id, description, post_img_key):
+    def add_post(self, email, description, img_key):
         try:
             self.table.put_item(
                 Item={
+                    'date_time_utc': str(datetime.datetime.utcnow()),
                     'email': email,
-                    'post_id': post_id,
-                    'post_time_utc': str(datetime.datetime.utcnow()),
                     'description': description,
-                    'post_img_key': post_img_key})
+                    'img_key': img_key})
         except ClientError as err:
             logger.error(
                 "Couldn't add post %s to table %s. Here's why: %s: %s",
-                email, post_id, self.table.name,
+                email, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
     # Get Post item from database
-    def get_post(self, email, post_id):
+    def get_post(self, date_time_utc, email):
         try:
-            response = self.table.get_item(Key={'email': email, 'post_id': int(post_id)})
+            response = self.table.get_item(Key={'date_time_utc': date_time_utc, 'email': email})
         except ClientError as err:
             logger.error(
                 "Couldn't get post %s from table %s. Here's why: %s: %s",
-                email, post_id, self.table.name,
+                date_time_utc, email, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Item']
 
     # Update Post item in database
-    def update_post(self, email, post_id, post_content):
+    def update_post(self, date_time_utc, email, post_content):
         try:
             response = self.table.update_item(
-                Key={'email': email, 'post_id': int(post_id)},
+                Key={'date_time_utc': date_time_utc, 'email': email},
                 UpdateExpression="set post_content=:p",
                 ExpressionAttributeValues={
                     ':p': post_content},
@@ -219,35 +218,35 @@ class SSPosts:
         except ClientError as err:
             logger.error(
                 "Couldn't update post %s in table %s. Here's why: %s: %s",
-                email, post_id, self.table.name,
+                date_time_utc, email, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Attributes']
 
     # Delete Post item from database
-    def delete_post(self, email, post_id):
+    def delete_post(self, date_time_utc, email):
         try:
-            self.table.delete_item(Key={'email': email, 'post_id': post_id})
+            self.table.delete_item(Key={'date_time_utc': date_time_utc, 'email': email})
         except ClientError as err:
             logger.error(
-                "Couldn't delete post %s. Here's why: %s: %s", email, post_id,
+                "Couldn't delete post %s. Here's why: %s: %s", date_time_utc, email,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
-    # Query Post item by username from database
-    def query_post(self, email):
+    # Query Post items by date-time-utc-now from database
+    def query_post(self):
         try:
-            response = self.table.query(KeyConditionExpression=Key('email').eq(email))
+            response = self.table.query(KeyConditionExpression=Key('date_time_utc').lt(str(datetime.datetime.utcnow())))
         except ClientError as err:
             logger.error(
-                "Couldn't query for posts with email %s. Here's why: %s: %s", email,
+                "Couldn't query for posts %s. Here's why: %s: %s",
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:
             return response['Items']
 
-    # Scan Posts by submission time from database
+    # Scan Post items from database
     def scan_posts(self):
         try:
             response = self.table.scan()

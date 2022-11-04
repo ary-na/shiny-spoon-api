@@ -45,37 +45,37 @@ async def get_ss_login(email: str):
 
 # Create new post
 @app.post('/posts/add-post')
-async def add_ss_post(email: str, post_id: str, description: str, post_img_key: str):
-    ss_posts.add_post(email, post_id, description, post_img_key)
+async def add_ss_post(email: str, description: str, post_img_key: str):
+    ss_posts.add_post(email, description, post_img_key)
 
 
-# Get post using username and post id
-@app.get('/posts/{email}/{post_id}')
-async def get_ss_post(email: str, post_id: int):
-    return ss_posts.get_post(email, post_id)
+# Get post using date time utc and email
+@app.get('/posts/{date_time_utc}/{email}')
+async def get_ss_post(date_time_utc: str, email: int):
+    return ss_posts.get_post(date_time_utc, email)
 
 
 # Update post
 @app.put('/posts/update-post')
-async def update_ss_post(email: str, post_id: int, post_content: str):
-    return ss_posts.update_post(email, post_id, post_content)
+async def update_ss_post(date_time_utc: str, email: str, post_content: str):
+    return ss_posts.update_post(date_time_utc, email, post_content)
 
 
 # Delete post
 @app.delete('/posts/delete-post')
-async def delete_ss_post(email: str, post_id: int):
-    ss_posts.delete_post(email, post_id)
+async def delete_ss_post(date_time_utc: str, email: str):
+    ss_posts.delete_post(date_time_utc, email)
 
 
-# Get post using user_name
-@app.get('/posts/{email}')
-async def get_ss_post(email: str):
-    return ss_posts.query_post(email)
-
-
-# Get posts
+# Get posts (Query)
 @app.get('/posts')
 async def get_ss_posts():
+    return ss_posts.query_post()
+
+
+# Get posts (scan)
+@app.get('/scan-posts')
+async def get_ss_post():
     return ss_posts.scan_posts()
 
 
