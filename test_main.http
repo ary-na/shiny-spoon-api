@@ -36,7 +36,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/posts/email/post-id
+GET http://127.0.0.1:8000/posts/date_time_utc/email
 Accept: application/json
 
 ###
@@ -51,12 +51,12 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/posts/email
+GET http://127.0.0.1:8000/posts
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/posts
+GET http://127.0.0.1:8000/scan-posts
 Accept: application/json
 
 ###
