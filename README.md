@@ -40,3 +40,7 @@ https://stackoverflow.com/questions/37016983/bad-request-error-flask-with-post-r
 
 
 https://stackoverflow.com/questions/37016983/bad-request-error-flask-with-post-request
+
+
+
+https://docs.aws.amazon.com/code-samples/latest/catalog/python-s3-s3_basics-presigned_url.py.html
