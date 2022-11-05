@@ -185,7 +185,8 @@ class SSPosts:
                     'email': email,
                     'date_time_utc': str(datetime.datetime.utcnow()),
                     'description': description,
-                    'img_key': img_key})
+                    'img_key': img_key,
+                    'active_state': 1})
         except ClientError as err:
             logger.error(
                 "Couldn't add post %s to table %s. Here's why: %s: %s",
@@ -234,10 +235,14 @@ class SSPosts:
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
-    # Query Post items by date-time-utc-now from database
+    # Query Post items by account state and sort by date-time-utc from database
     def query_post(self):
         try:
-            response = self.table.query(KeyConditionExpression=Key('date_time_utc').lt(str(datetime.datetime.utcnow())))
+            response = self.table.query(IndexName='active_state_date_time_utc-index',
+                                        KeyConditionExpression=Key('active_state').eq(1),
+                                        ScanIndexForward=False,
+                                        Limit=15
+                                        )
         except ClientError as err:
             logger.error(
                 "Couldn't query for posts %s. Here's why: %s: %s",
