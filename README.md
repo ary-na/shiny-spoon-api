@@ -44,3 +44,28 @@ https://stackoverflow.com/questions/37016983/bad-request-error-flask-with-post-r
 
 
 https://docs.aws.amazon.com/code-samples/latest/catalog/python-s3-s3_basics-presigned_url.py.html
+
+https://stackoverflow.com/questions/42679363/dynamodb-query-all-data-and-sorted-by-date-descending
+
+https://stackoverflow.com/questions/34171563/how-do-i-query-aws-dynamodb-in-python
+
+https://stackoverflow.com/questions/46414535/dynamodb-query-key-condition-not-supported
+
+https://stackoverflow.com/questions/53254060/how-can-i-query-by-sort-key-in-aws-dynamodb
+
+https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/python/example_code/dynamodb#code-examples
+
+https://stackoverflow.com/questions/19818618/aws-dynamodb-retrieve-entire-table
+
+https://stackoverflow.com/questions/47450672/dynamodb-error-either-the-keyconditions-or-keyconditionexpression-parameter-mu
+
+https://stackoverflow.com/questions/28642145/order-results-in-dynamodb-scan
+
+https://stackoverflow.com/questions/9297326/is-it-possible-to-order-results-with-query-or-scan-in-dynamodb
+
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Scan.html#Scan.FilterExpression
+
+https://aws.amazon.com/blogs/database/using-sort-keys-to-organize-data-in-amazon-dynamodb/
+
+https://aws.amazon.com/blogs/database/using-sort-keys-to-organize-data-in-amazon-dynamodb/
+
