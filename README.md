@@ -69,3 +69,9 @@ https://aws.amazon.com/blogs/database/using-sort-keys-to-organize-data-in-amazon
 
 https://aws.amazon.com/blogs/database/using-sort-keys-to-organize-data-in-amazon-dynamodb/
 
+
+
+
+https://fastapi.tiangolo.com/tutorial/path-params/
+
+https://fastapi.tiangolo.com/tutorial/path-params/
