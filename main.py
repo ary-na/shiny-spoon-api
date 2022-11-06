@@ -10,11 +10,14 @@ ss_posts = init_ss_posts('ss-posts', boto3.resource('dynamodb', 'ap-southeast-2'
 s3_client = boto3.client('s3')
 bucket_name = 'shiny-spoon'
 
+profile_images_folder = 'profile-images/'
+post_images_folder = 'post-images/'
+
 
 # Create new login
 @app.post('/logins/add-login')
-async def add_ss_login(email: str, username: str, password: str):
-    ss_logins.add_login(email, username, password)
+async def add_ss_login(email: str, username: str, password: str, img_key: str):
+    ss_logins.add_login(email, username, password, img_key)
 
 
 # Get login using username and email
@@ -51,19 +54,19 @@ async def add_ss_post(email: str, description: str, post_img_key: str):
 
 # Get post using date time utc and email
 @app.get('/posts/{email}/{date_time_utc}')
-async def get_ss_post(email: str, date_time_utc: str,):
+async def get_ss_post(email: str, date_time_utc: str, ):
     return ss_posts.get_post(email, date_time_utc)
 
 
 # Update post
 @app.put('/posts/update-post')
 async def update_ss_post(email: str, date_time_utc: str, post_content: str):
-    return ss_posts.update_post(email, date_time_utc,  post_content)
+    return ss_posts.update_post(email, date_time_utc, post_content)
 
 
 # Delete post
 @app.delete('/posts/delete-post')
-async def delete_ss_post(email: str, date_time_utc: str,):
+async def delete_ss_post(email: str, date_time_utc: str, ):
     ss_posts.delete_post(email, date_time_utc)
 
 
@@ -81,13 +84,25 @@ async def get_ss_post():
 
 # -----------------------------------------------------------------------------------------------
 
-# Upload Image
-@app.post('/utilities/upload-img')
-async def upload_ss_img(img_file: UploadFile, folder_name: str, object_key: str):
-    upload_img(s3_client, bucket_name, img_file, folder_name, object_key)
+# Upload profile image
+@app.post('/utilities/upload-profile-img')
+async def upload_ss_profile_img(img_file: UploadFile, object_key: str):
+    upload_img(s3_client, bucket_name, img_file, profile_images_folder, object_key)
 
 
-# Get pre-signed url
-@app.get('utilities/{object-key}')
-async def get_pre_signed_url(object_key: str):
-    return generate_pre_signed_url(s3_client, bucket_name, object_key)
+# Upload post image
+@app.post('/utilities/upload-post-img')
+async def upload_ss_post_img(img_file: UploadFile, object_key: str):
+    upload_img(s3_client, bucket_name, img_file, post_images_folder, object_key)
+
+
+# Get pre-signed url profile image
+@app.get("/utilities/profile-img/{object_key}")
+async def get_pre_signed_url_profile_img(object_key: str):
+    return generate_pre_signed_url(s3_client, bucket_name, profile_images_folder, object_key)
+
+
+# Get pre-signed url post image
+@app.get("/utilities/post-img/{object_key}")
+async def get_pre_signed_url_post_img(object_key: str):
+    return generate_pre_signed_url(s3_client, bucket_name, post_images_folder, object_key)

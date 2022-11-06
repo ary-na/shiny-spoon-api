@@ -57,14 +57,15 @@ class SSLogins:
             return self.table
 
     # Add Login item to database
-    def add_login(self, email, username, password):
+    def add_login(self, email, username, password, img_key):
 
         try:
             self.table.put_item(
                 Item={
                     'email': email,
                     'username': username,
-                    'password': password})
+                    'password': password,
+                    'img_key': img_key})
         except ClientError as err:
             logger.error(
                 "Couldn't add login %s to table %s. Here's why: %s: %s",
@@ -303,11 +304,11 @@ def upload_img(s3_client, bucket_name, img_file, folder_name, object_key):
 
 
 # Get pre-signed url
-def generate_pre_signed_url(s3_client, bucket_name, object_key):
+def generate_pre_signed_url(s3_client, bucket_name, folder_name, object_key):
     try:
         url = s3_client.generate_presigned_url(
             ClientMethod="get_object",
-            Params={'Bucket': bucket_name, 'Key': object_key},
+            Params={'Bucket': bucket_name, 'Key': folder_name + object_key},
             ExpiresIn=3600
         )
         logger.info("Got pre-signed URL: %s", url)
