@@ -43,6 +43,14 @@ https://stackoverflow.com/questions/37016983/bad-request-error-flask-with-post-r
 
 
 
+
+https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/python/example_code/dynamodb
+
+https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/python/example_code/dynamodb
+https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/python/example_code/dynamodb
+
+
+
 https://docs.aws.amazon.com/code-samples/latest/catalog/python-s3-s3_basics-presigned_url.py.html
 
 https://stackoverflow.com/questions/42679363/dynamodb-query-all-data-and-sorted-by-date-descending
