@@ -72,6 +72,12 @@ async def delete_ss_post(email: str, date_time_utc: str, ):
     ss_posts.delete_post(email, date_time_utc)
 
 
+# Get user posts (Query)
+@app.get('/posts/{email}')
+async def get_ss_user_posts(email: str):
+    return ss_posts.query_user_post(email)
+
+
 # Get posts (Query)
 @app.get('/posts')
 async def get_ss_posts():

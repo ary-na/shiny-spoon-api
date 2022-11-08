@@ -237,6 +237,21 @@ class SSPosts:
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
 
+    # Query Post items by email and sort by date-time-utc from database
+    def query_user_post(self, email):
+        try:
+            response = self.table.query(KeyConditionExpression=Key('email').eq(email),
+                                        ScanIndexForward=False,
+                                        Limit=15
+                                        )
+        except ClientError as err:
+            logger.error(
+                "Couldn't query for posts %s. Here's why: %s: %s",
+                err.response['Error']['Code'], err.response['Error']['Message'])
+            raise
+        else:
+            return response['Items']
+
     # Query Post items by account state and sort by date-time-utc from database
     def query_post(self):
         try:

@@ -51,6 +51,11 @@ Accept: application/json
 
 ###
 
+GET http://127.0.0.1:8000/posts/email
+Accept: application/json
+
+###
+
 GET http://127.0.0.1:8000/posts
 Accept: application/json
 
