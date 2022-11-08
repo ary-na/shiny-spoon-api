@@ -1,13 +1,14 @@
 import boto3
 from fastapi import FastAPI, UploadFile, File
 
-from models import init_ss_logins, init_ss_posts, upload_img, generate_pre_signed_url
+from models import init_ss_logins, init_ss_posts, upload_img, generate_pre_signed_url, email_notification
 
 app = FastAPI()
 
 ss_logins = init_ss_logins('ss-logins', boto3.resource('dynamodb', 'ap-southeast-2'))
 ss_posts = init_ss_posts('ss-posts', boto3.resource('dynamodb', 'ap-southeast-2'))
 s3_client = boto3.client('s3')
+lambda_client = boto3.client('lambda', region_name='ap-southeast-2')
 bucket_name = 'shiny-spoon'
 
 profile_images_folder = 'profile-images/'
@@ -18,6 +19,7 @@ post_images_folder = 'post-images/'
 @app.post('/logins/add-login')
 async def add_ss_login(email: str, username: str, password: str, img_key: str):
     ss_logins.add_login(email, username, password, img_key)
+    email_notification(lambda_client, email, username)
 
 
 # Get login using username and email

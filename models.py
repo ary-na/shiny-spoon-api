@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 
 from boto3.dynamodb.conditions import Key
@@ -293,6 +294,16 @@ def init_ss_posts(table_name, dyn_resource):
         print(f"\nCreated table {ss_posts.table.name}.")
 
     return ss_posts
+
+
+# -----------------------------------------------------------------------------------------------
+
+# Call aws lambda function
+def email_notification(lambda_client, email, username):
+    lambda_payload = {"user_email": email, "username": username}
+    lambda_client.invoke(FunctionName='emailNotification',
+                         InvocationType='RequestResponse',
+                         Payload=json.dumps(lambda_payload))
 
 
 # -----------------------------------------------------------------------------------------------
