@@ -75,3 +75,15 @@ https://aws.amazon.com/blogs/database/using-sort-keys-to-organize-data-in-amazon
 https://fastapi.tiangolo.com/tutorial/path-params/
 
 https://fastapi.tiangolo.com/tutorial/path-params/
+
+
+https://dock2learn.com/tech/invoking-a-lambda-from-a-lambda/
+
+https://medium.com/codex/invoke-a-second-lambda-from-an-existing-aws-lambda-using-python-2de8ee4b8cc9
+
+https://qxf2.com/blog/invoking-aws-lambda-functions-from-a-flask-app/
+
+https://qxf2.com/blog/invoking-aws-lambda-functions-from-a-flask-app/
+
+https://qxf2.com/blog/invoking-aws-lambda-functions-from-a-flask-app/
+
