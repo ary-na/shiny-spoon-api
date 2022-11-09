@@ -229,6 +229,24 @@ class SSPosts:
         else:
             return response['Item']
 
+    # Update Post
+    def update_post(self, email, date_time_utc, description, post_img_key):
+        try:
+            response = self.table.update_item(
+                Key={'email': email, 'date_time_utc': date_time_utc},
+                UpdateExpression="set description=:d, post_img_key=:p",
+                ExpressionAttributeValues={
+                    ':d': description, ':p': post_img_key},
+                ReturnValues="UPDATED_NEW")
+        except ClientError as err:
+            logger.error(
+                "Couldn't update post %s in table %s. Here's why: %s: %s",
+                email, self.table.name,
+                err.response['Error']['Code'], err.response['Error']['Message'])
+            raise
+        else:
+            return response['Attributes']
+
     # Update Post active state in database
     def update_post_active_state(self, email, date_time_utc):
         try:

@@ -1,5 +1,5 @@
 import boto3
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile
 
 from models import init_ss_logins, init_ss_posts, upload_img, generate_pre_signed_url, email_notification
 
@@ -67,6 +67,12 @@ async def get_ss_post(email: str, date_time_utc: str, ):
 
 
 # Update post
+@app.put('/posts/update-post')
+async def update_ss_post(email: str, date_time_utc: str, description: str, post_img_key: str):
+    return ss_posts.update_post(email, date_time_utc, description, post_img_key)
+
+
+# Update post active state
 @app.put('/posts/update-post-active-state')
 async def update_ss_post_active_state(email: str, date_time_utc: str):
     return ss_posts.update_post_active_state(email, date_time_utc)
