@@ -12,7 +12,12 @@ Accept: application/json
 
 ###
 
-PUT http://127.0.0.1:8000/logins/update-login
+PUT http://127.0.0.1:8000/logins/update-login-password
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/logins/update-login-image-key
 Accept: application/json
 
 ###
@@ -46,6 +51,11 @@ Accept: application/json
 
 ###
 
+PUT http://127.0.0.1:8000/posts/update-post-active-state
+Accept: application/json
+
+###
+
 DELETE http://127.0.0.1:8000/posts/delete-post
 Accept: application/json
 
@@ -70,12 +80,22 @@ Accept: application/json
 
 # Utilities
 
-POST http://127.0.0.1:8000/utilities/upload-img
+POST http://127.0.0.1:8000/utilities/upload-profile-img
 Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/utilities/object-key
+POST http://127.0.0.1:8000/utilities/upload-post-img
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/utilities/profile-img/object-key
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/utilities/post-img/object-key
 Accept: application/json
 
 ###
