@@ -87,8 +87,8 @@ class SSLogins:
         else:
             return response['Item']
 
-    # Update Login item in database
-    def update_login(self, email, username, password):
+    # Update Login password in database
+    def update_login_password(self, email, username, password):
         try:
             response = self.table.update_item(
                 Key={'email': email, 'username': username},
@@ -98,7 +98,25 @@ class SSLogins:
                 ReturnValues="UPDATED_NEW")
         except ClientError as err:
             logger.error(
-                "Couldn't update login %s in table %s. Here's why: %s: %s",
+                "Couldn't update login password %s in table %s. Here's why: %s: %s",
+                email, username, self.table.name,
+                err.response['Error']['Code'], err.response['Error']['Message'])
+            raise
+        else:
+            return response['Attributes']
+
+    # Update Login image key in database
+    def update_login_profile_image(self, email, username, img_key):
+        try:
+            response = self.table.update_item(
+                Key={'email': email, 'username': username},
+                UpdateExpression="set img_key=:i",
+                ExpressionAttributeValues={
+                    ':i': img_key},
+                ReturnValues="UPDATED_NEW")
+        except ClientError as err:
+            logger.error(
+                "Couldn't update login image key %s in table %s. Here's why: %s: %s",
                 email, username, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
@@ -180,14 +198,16 @@ class SSPosts:
             return self.table
 
     # Add Post item to database
-    def add_post(self, email, description, img_key):
+    def add_post(self, email, username, user_profile_img_key, description, post_img_key):
         try:
             self.table.put_item(
                 Item={
                     'email': email,
                     'date_time_utc': str(datetime.datetime.utcnow()),
+                    'username': username,
+                    'user_profile_img_key': user_profile_img_key,
                     'description': description,
-                    'img_key': img_key,
+                    'post_img_key': post_img_key,
                     'active_state': 1})
         except ClientError as err:
             logger.error(
@@ -209,19 +229,19 @@ class SSPosts:
         else:
             return response['Item']
 
-    # Update Post item in database
-    def update_post(self, email, date_time_utc, post_content):
+    # Update Post active state in database
+    def update_post_active_state(self, email, date_time_utc):
         try:
             response = self.table.update_item(
                 Key={'email': email, 'date_time_utc': date_time_utc},
-                UpdateExpression="set post_content=:p",
+                UpdateExpression="set active_state=:a",
                 ExpressionAttributeValues={
-                    ':p': post_content},
+                    ':a': 0},
                 ReturnValues="UPDATED_NEW")
         except ClientError as err:
             logger.error(
                 "Couldn't update post %s in table %s. Here's why: %s: %s",
-                email, date_time_utc, self.table.name,
+                email, self.table.name,
                 err.response['Error']['Code'], err.response['Error']['Message'])
             raise
         else:

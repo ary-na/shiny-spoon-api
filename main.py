@@ -28,10 +28,16 @@ async def get_ss_login(email: str, username: str):
     return ss_logins.get_login(email, username)
 
 
-# Update login
-@app.put("/logins/update-login")
-async def update_ss_login(email: str, username: str, password: str):
-    return ss_logins.update_login(email, username, password)
+# Update login password
+@app.put("/logins/update-login-password")
+async def update_ss_login_password(email: str, username: str, password: str):
+    return ss_logins.update_login_password(email, username, password)
+
+
+# Update login profile image
+@app.put("/logins/update-login-profile-image")
+async def update_ss_login_profile_image(email: str, username: str, img_key: str):
+    return ss_logins.update_login_profile_image(email, username, img_key)
 
 
 # Delete login
@@ -50,8 +56,8 @@ async def get_ss_login(email: str):
 
 # Create new post
 @app.post('/posts/add-post')
-async def add_ss_post(email: str, description: str, post_img_key: str):
-    ss_posts.add_post(email, description, post_img_key)
+async def add_ss_post(email: str, username: str, user_profile_img_key: str, description: str, post_img_key: str):
+    ss_posts.add_post(email, username, user_profile_img_key, description, post_img_key)
 
 
 # Get post using date time utc and email
@@ -61,9 +67,9 @@ async def get_ss_post(email: str, date_time_utc: str, ):
 
 
 # Update post
-@app.put('/posts/update-post')
-async def update_ss_post(email: str, date_time_utc: str, post_content: str):
-    return ss_posts.update_post(email, date_time_utc, post_content)
+@app.put('/posts/update-post-active-state')
+async def update_ss_post_active_state(email: str, date_time_utc: str):
+    return ss_posts.update_post_active_state(email, date_time_utc)
 
 
 # Delete post
