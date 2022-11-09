@@ -106,7 +106,7 @@ class SSLogins:
             return response['Attributes']
 
     # Update Login image key in database
-    def update_login_profile_image(self, email, username, img_key):
+    def update_login_image_key(self, email, username, img_key):
         try:
             response = self.table.update_item(
                 Key={'email': email, 'username': username},
@@ -198,14 +198,14 @@ class SSPosts:
             return self.table
 
     # Add Post item to database
-    def add_post(self, email, username, user_profile_img_key, description, post_img_key):
+    def add_post(self, email, username, login_img_key, description, post_img_key):
         try:
             self.table.put_item(
                 Item={
                     'email': email,
                     'date_time_utc': str(datetime.datetime.utcnow()),
                     'username': username,
-                    'user_profile_img_key': user_profile_img_key,
+                    'login_img_key': login_img_key,
                     'description': description,
                     'post_img_key': post_img_key,
                     'active_state': 1})

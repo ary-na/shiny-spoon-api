@@ -34,10 +34,10 @@ async def update_ss_login_password(email: str, username: str, password: str):
     return ss_logins.update_login_password(email, username, password)
 
 
-# Update login profile image
-@app.put("/logins/update-login-profile-image")
-async def update_ss_login_profile_image(email: str, username: str, img_key: str):
-    return ss_logins.update_login_profile_image(email, username, img_key)
+# Update login image key
+@app.put("/logins/update-login-image-key")
+async def update_ss_login_image_key(email: str, username: str, img_key: str):
+    return ss_logins.update_login_image_key(email, username, img_key)
 
 
 # Delete login
@@ -46,7 +46,7 @@ async def delete_ss_login(email: str, username: str):
     ss_logins.delete_login(email, username)
 
 
-# Get login using user_name
+# Query login using email
 @app.get("/logins/{email}")
 async def get_ss_login(email: str):
     return ss_logins.query_login(email)
@@ -56,11 +56,11 @@ async def get_ss_login(email: str):
 
 # Create new post
 @app.post('/posts/add-post')
-async def add_ss_post(email: str, username: str, user_profile_img_key: str, description: str, post_img_key: str):
-    ss_posts.add_post(email, username, user_profile_img_key, description, post_img_key)
+async def add_ss_post(email: str, username: str, login_img_key: str, description: str, post_img_key: str):
+    ss_posts.add_post(email, username, login_img_key, description, post_img_key)
 
 
-# Get post using date time utc and email
+# Get post using email and date time utc
 @app.get('/posts/{email}/{date_time_utc}')
 async def get_ss_post(email: str, date_time_utc: str, ):
     return ss_posts.get_post(email, date_time_utc)
@@ -80,11 +80,11 @@ async def update_ss_post_active_state(email: str, date_time_utc: str):
 
 # Delete post
 @app.delete('/posts/delete-post')
-async def delete_ss_post(email: str, date_time_utc: str, ):
+async def delete_ss_post(email: str, date_time_utc: str):
     ss_posts.delete_post(email, date_time_utc)
 
 
-# Get user posts (Query)
+# Get user posts by email (Query)
 @app.get('/posts/{email}')
 async def get_ss_user_posts(email: str):
     return ss_posts.query_user_post(email)
@@ -98,7 +98,7 @@ async def get_ss_posts():
 
 # Get posts (scan)
 @app.get('/scan-posts')
-async def get_ss_post():
+async def scan_ss_post():
     return ss_posts.scan_posts()
 
 
