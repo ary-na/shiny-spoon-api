@@ -1,5 +1,5 @@
-boto3==1.26.4
-botocore==1.29.4
+boto3==1.26.6
+botocore==1.29.6
 flask==2.2.2
 fastapi==0.86.0
 python-multipart==0.0.5
